@@ -1,0 +1,37 @@
+{% extends 'myapp/base_admin.html' %}
+{% block content %}
+<h2>Manage Drivers</h2>
+<button class="btn btn-primary mb-4" data-bs-toggle="collapse" data-bs-target="#addDriverForm">Add New Driver</button>
+
+<div id="addDriverForm" class="collapse">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Add Driver</button>
+  </form>
+</div>
+
+<h3>Existing Drivers</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Driver ID</th>
+      <th>Name</th>
+      <th>License Number</th>
+      <th>Contact Info</th>
+      <th>Age</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for driver in drivers %}
+      <tr>
+        <td>{{ driver.id }}</td>
+        <td>{{ driver.name }}</td>
+        <td>{{ driver.license_number }}</td>
+        <td>{{ driver.contact_info }}</td>
+        <td>{{ driver.age }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

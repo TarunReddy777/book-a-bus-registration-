@@ -1,0 +1,43 @@
+{% extends 'myapp/base_admin.html' %}
+{% block content %}
+<h2>Manage Buses</h2>
+<button class="btn btn-primary mb-4" data-bs-toggle="collapse" data-bs-target="#addBusForm">Add New Bus</button>
+
+<div id="addBusForm" class="collapse">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Add Bus</button>
+  </form>
+</div>
+
+<h3>Existing Buses</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Bus ID</th>
+      <th>Bus Name</th>
+      <th>Capacity</th>
+      <th>Fare</th>
+      <th>Bus Type</th>
+      <th>Company Name</th>
+      <th>Source</th>
+      <th>Destination</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bus in buses %}
+      <tr>
+        <td>{{ bus.id }}</td>
+        <td>{{ bus.name }}</td>
+        <td>{{ bus.capacity }}</td>
+        <td>{{ bus.fare }}</td>
+        <td>{{ bus.route.source }} to {{ bus.route.destination }}</td>
+        <td>{{ bus.company.name }}</td>
+        <td>{{ bus.route.source }}</td>
+        <td>{{ bus.route.destination }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

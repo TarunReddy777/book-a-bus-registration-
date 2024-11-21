@@ -14,4 +14,10 @@ urlpatterns = [
     path('reservation_success/', views.reservation_success, name='reservation_success'),
     path('feedback/', views.feedback, name='feedback'),
     path('payment/', views.payment, name='payment'),
+
+    ##### ADMIN #####
+    path('aadmin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('aadmin/manage_buses/', views.manage_buses, name='admin_manage_buses'),
+    path('aadmin/manage_drivers/', views.manage_drivers, name='admin_manage_drivers'),
+    path('aadmin/view_reservations/', views.view_reservations, name='admin_view_reservations'),
 ]

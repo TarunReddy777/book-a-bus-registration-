@@ -43,7 +43,7 @@ class Route(models.Model):
         return strHour+':'+strMinutes
 
     def __str__(self):
-        return f"{self.origin} to {self.destination} on {self.date}"
+        return f"{self.source} to {self.destination}"
 
 class Driver(models.Model):
     name = models.CharField(max_length=100)
