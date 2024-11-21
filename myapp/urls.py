@@ -6,7 +6,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('findbus/', views.findbus, name='findbus'),
     path('bus_confirmation/', views.bus_confirmation, name='bus_confirmation'),
-    path('seebookings/', views.seebookings, name='seebookings'),
     path('signin/', views.signin, name='signin'),
     path('signout/', views.signout, name='signout'),
     path('success/', views.success, name='success'),
@@ -15,6 +14,7 @@ urlpatterns = [
     path('feedback/', views.feedback, name='feedback'),
     path('payment/', views.payment, name='payment'),
     path('select_seats/', views.select_seats, name='select_seats'),
+    path('see_bookings/', views.see_bookings, name='see_bookings'),
 
     ##### ADMIN #####
     path('brsadmin/dashboard/', views.admin_dashboard, name='admin_dashboard'),

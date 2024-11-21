@@ -79,7 +79,7 @@ def findbus(request):
         context = {'buses': buses, 'from_route': from_route,
                    'to_route': to_route, 'date_of_journey': date_of_journey}
         return render(request, 'myapp/list_buses.html', context)
-
+ 
     context = {
         'options': [
             ('Atlanta', 'Atlanta'),
@@ -213,10 +213,30 @@ def payment(request):
 
     context = booking_data
 
-    context['amount'] = round(2.5 * int(context['seat_number']), 2)
+    context['amount'] = round(10 * int(context['seat_number']), 2)
     cache.set('booking_data', context)
     return render(request, 'myapp/payment.html', booking_data)
 
+@login_required
+def see_bookings(request):
+    qreservations = Reservation.objects.filter(passenger=request.user.id)
+
+    reservations = []
+    for booking in qreservations:
+        reserve = {
+            'id' : booking.id,
+            'source' : booking.route.source,
+            'destination' : booking.route.destination,
+            'date' : booking.reservation_date.strftime('%d/%m/%Y'),
+            'bus_number' : booking.bus.bus_number,
+            'distance' : booking.route.distance,
+        }
+        reservations.append(reserve)
+
+    context = {
+        'reservations': reservations
+    }
+    return render(request, 'myapp/get_reservations.html', context=context)
 
 ############# ADMIN ##############
 
