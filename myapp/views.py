@@ -186,7 +186,16 @@ def payment(request):
             seat=Seat.objects.get(id=random.randint(1, 10)),
             status="Booked"
         )
-        return render(request, 'myapp/reservation_success.html')
+        context = {
+            'reservation_id': reservation.id,
+            'source': booking_data['from_route'],
+            'destination': booking_data['to_route'],
+            'date': booking_data['date_of_journey'],
+            'bus_number': reservation.bus.bus_number,
+            'distance': reservation.route.distance,
+            'payment_amount': amount
+        }
+        return render(request, 'myapp/reservation_success.html', context=context)
 
     return render(request, 'myapp/payment.html', booking_data)
 

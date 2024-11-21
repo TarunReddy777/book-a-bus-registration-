@@ -32,15 +32,6 @@ class Route(models.Model):
     endTime = models.TimeField(default=timezone.now)
     distance = models.DecimalField(max_digits=5, decimal_places=2,blank=True)
 
-    @property
-    def duration(self):
-        duration = self.endTime - self.startTime
-        hours, remainder = divmod(duration.total_seconds(), 3600)
-        minutes = remainder / 60
-        strHour = str(hours) if hours >=10 else "0"+str(hours)
-        strMinutes = str(minutes) if minutes >=10 else "0"+str(minutes)
-        return strHour+':'+strMinutes
-
     def __str__(self):
         return f"{self.source} to {self.destination}"
 

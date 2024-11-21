@@ -3,5 +3,20 @@
 <div class="container my-5">
     <h1>Reservation Successful!</h1>
     <p>Your seat has been reserved successfully.</p>
+
+    <div class="ticket">
+        <div class="ticket-header">
+            <h2>Bus Ticket</h2>
+        </div>
+        <div class="ticket-info">
+            <p><strong>Reservation ID:</strong> {{ reservation_id }}</p>
+            <p><strong>From:</strong> {{ source }}</p>
+            <p><strong>To:</strong> {{ destination }}</p>
+            <p><strong>Date:</strong> {{ date }}</p>
+            <p><strong>Bus Number:</strong> {{ bus_number }}</p>
+            <p><strong>Distance:</strong> {{ distance }} km</p>
+            <p><strong>Payment Amount:</strong> {{ payment_amount }}</p>
+        </div>
+    </div>
 </div>
 {% endblock %}
