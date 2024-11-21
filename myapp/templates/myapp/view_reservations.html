@@ -7,9 +7,8 @@
   <thead>
     <tr>
       <th>Reservation ID</th>
-      <th>Bus Name</th>
+      <th>Bus Unique ID</th>
       <th>Customer Name</th>
-      <th>Seats Reserved</th>
       <th>Total Fare</th>
       <th>Status</th>
       <th>Reservation Date</th>
@@ -19,10 +18,9 @@
     {% for reservation in reservations %}
       <tr>
         <td>{{ reservation.id }}</td>
-        <td>{{ reservation.bus.name }}</td>
-        <td>{{ reservation.customer.username }}</td>
-        <td>{{ reservation.seats_reserved }}</td>
-        <td>{{ reservation.total_fare }}</td>
+        <td>{{ reservation.bus.bus_number }}</td>
+        <td>{{ reservation.passenger.name }}</td>
+        <td>{{ reservation.bus.fare }}</td>
         <td>{{ reservation.status }}</td>
         <td>{{ reservation.reservation_date }}</td>
       </tr>

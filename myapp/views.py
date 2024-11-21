@@ -93,8 +93,8 @@ def findbus(request):
     return render(request, 'myapp/findbus.html', context=context)
 
 
-def seebookings(request):
-    return render(request, 'myapp/seebookings.html')
+# def seebookings(request):
+#     return render(request, 'myapp/seebookings.html')
 
 
 def signup(request):
@@ -216,26 +216,36 @@ def payment(request):
     cache.set('booking_data', context)
     return render(request, 'myapp/payment.html', booking_data)
 
-@login_required
 def see_bookings(request):
-    qreservations = Reservation.objects.filter(passenger=request.user.id)
+    try:
+        # Get the current user's passenger profile
+        passenger = Passenger.objects.get(user=request.user)
+        
+        # Filter reservations by the passenger
+        qreservations = Reservation.objects.filter(passenger=passenger)
+        print(qreservations)  # For debugging
+        
+        reservations = []
+        for booking in qreservations:
+            reserve = {
+                'id': booking.id,
+                'source': booking.route.source,
+                'destination': booking.route.destination,
+                'date': booking.reservation_date.strftime('%d/%m/%Y'),
+                'bus_number': booking.bus.bus_number,
+                'distance': booking.route.distance,
+            }
+            reservations.append(reserve)
 
-    reservations = []
-    for booking in qreservations:
-        reserve = {
-            'id' : booking.id,
-            'source' : booking.route.source,
-            'destination' : booking.route.destination,
-            'date' : booking.reservation_date.strftime('%d/%m/%Y'),
-            'bus_number' : booking.bus.bus_number,
-            'distance' : booking.route.distance,
+        context = {
+            'reservations': reservations
         }
-        reservations.append(reserve)
+        return render(request, 'myapp/get_reservations.html', context=context)
+    
+    except Passenger.DoesNotExist:
+        # If the Passenger object doesn't exist for the user
+        return render(request, 'myapp/get_reservations.html', {'reservations': []})
 
-    context = {
-        'reservations': reservations
-    }
-    return render(request, 'myapp/get_reservations.html', context=context)
 
 ############# ADMIN ##############
 

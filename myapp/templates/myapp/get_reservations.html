@@ -1,32 +1,37 @@
-{% extends 'myapp/base.html' %} {% block content %}
+{% extends 'myapp/base.html' %}
 
-<div>
-  <h2>Reservation Details</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Reservation ID</th>
-        <th>Source</th>
-        <th>Destination</th>
-        <th>Date</th>
-        <th>Bus Number</th>
-        <th>Distance</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for reservation in reservations %}
-      <tr>
-        <td>{{ reservation.id }}</td>
-        <td>{{ reservation.source }}</td>
-        <td>{{ reservation.destination }}</td>
-        <td>{{ reservation.date }}</td>
-        <td>{{ reservation.bus_number }}</td>
-        <td>{{ reservation.distance }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+{% block content %}
+  <div>
+    <h2>Reservation Details</h2>
+    {% if reservations %}
+      <table>
+        <thead>
+          <tr>
+            <th>Reservation ID</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Bus Number</th>
+            <th>Distance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reservation in reservations %}
+          <tr>
+            <td>{{ reservation.id }}</td>
+            <td>{{ reservation.source }}</td>
+            <td>{{ reservation.destination }}</td>
+            <td>{{ reservation.date }}</td>
+            <td>{{ reservation.bus_number }}</td>
+            <td>{{ reservation.distance }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>You have no current bookings.</p>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block styles %}
@@ -43,35 +48,7 @@
     }
 
     th {
-        background-color:   
-#f2f2f2;
+        background-color: #f2f2f2;
     }
-
-    le>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            border: 1px solid black;
-        }
-
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color:   
- #f2f2f2;
-        }
-
-        td   
- {
-            width: 150px; /* Adjust the width as needed */
-        }
-
-        td:not(:last-child) {
-            border-right: none; /* Remove right border for cells except the last one */
-        }
 </style>
 {% endblock %}
