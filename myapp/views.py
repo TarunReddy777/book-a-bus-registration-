@@ -9,7 +9,6 @@ from .models import Bus, User, BusCompany, Seat, Route, Driver
 from django.core.cache import cache
 import random
 
-@login_required
 def home(request):
     return render(request, 'myapp/home.html')
 

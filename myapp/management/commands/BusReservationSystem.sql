@@ -2,14 +2,14 @@ CREATE DATABASE Bus_Reservation_System;
 
 USE DATABASE Bus_Reservation_System;
 
--- Create BusCompany table
+
 CREATE TABLE BusCompany (
     CompanyID INT PRIMARY KEY AUTO_INCREMENT,
     CompanyName VARCHAR(100) NOT NULL,
     Email VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Create Route table
+
 CREATE TABLE Route (
     RouteID INT PRIMARY KEY AUTO_INCREMENT,
     Source VARCHAR(100) NOT NULL,
@@ -18,7 +18,6 @@ CREATE TABLE Route (
     Duration VARCHAR(100) NOT NULL
 );
 
--- Create Bus table
 CREATE TABLE Bus (
     BusID INT PRIMARY KEY AUTO_INCREMENT,
     BusName VARCHAR(100) NOT NULL,
@@ -32,7 +31,7 @@ CREATE TABLE Bus (
     FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
 );
 
--- Create Passenger table
+
 CREATE TABLE Passenger (
     Email VARCHAR(100) PRIMARY KEY,
     FirstName VARCHAR(100) NOT NULL,
@@ -40,7 +39,7 @@ CREATE TABLE Passenger (
     PhoneNumber VARCHAR(15) NOT NULL
 );
 
--- Create Reservation table
+
 CREATE TABLE Reservation (
     ReservationID INT PRIMARY KEY AUTO_INCREMENT,
     ReservationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -54,7 +53,7 @@ CREATE TABLE Reservation (
     FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
 );
 
--- Create Ticket table
+
 CREATE TABLE Tickets (
     TicketNumber VARCHAR(20) PRIMARY KEY,
     Price DECIMAL(10, 2) NOT NULL,
@@ -63,14 +62,14 @@ CREATE TABLE Tickets (
     FOREIGN KEY (ReservationID) REFERENCES Reservation(ReservationID)
 );
 
--- Create BusCompanies table
+
 CREATE TABLE BusCompanies (
     CompanyID INT PRIMARY KEY AUTO_INCREMENT,
     CompanyName VARCHAR(100) NOT NULL,
     Email VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Create Driver table
+
 CREATE TABLE Drivers (
     DriverID INT PRIMARY KEY AUTO_INCREMENT,
     FirstName VARCHAR(100) NOT NULL,
@@ -79,7 +78,7 @@ CREATE TABLE Drivers (
     DateOfBirth DATE NOT NULL
 );
 
--- Create Payment table
+
 CREATE TABLE Payment (
     PaymentID INT PRIMARY KEY AUTO_INCREMENT,
     Amount DECIMAL(10, 2) NOT NULL,
@@ -90,7 +89,7 @@ CREATE TABLE Payment (
     FOREIGN KEY (ReservationID) REFERENCES Reservation(ReservationID)
 );
 
--- Create Seat table
+
 CREATE TABLE Seats (
     BusID INT NOT NULL,
     SeatNumber VARCHAR(5) NOT NULL,
@@ -99,7 +98,7 @@ CREATE TABLE Seats (
     FOREIGN KEY (BusID) REFERENCES Bus(BusID)
 );
 
--- Create Feedback table
+
 CREATE TABLE Feedback (
     FeedbackID INT PRIMARY KEY AUTO_INCREMENT,
     Rating INT NOT NULL CHECK (Rating BETWEEN 1 AND 5),
@@ -108,7 +107,7 @@ CREATE TABLE Feedback (
     FOREIGN KEY (PassengerEmail) REFERENCES Passenger(Email)
 );
 
--- Create Bus_Driver_Mapping table
+
 CREATE TABLE Bus_Driver_Mapping (
     BusID INT NOT NULL,
     DriverID INT NOT NULL,
