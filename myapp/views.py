@@ -189,3 +189,47 @@ def payment(request):
         return render(request, 'myapp/reservation_success.html')
 
     return render(request, 'myapp/payment.html', booking_data)
+
+
+
+
+############# ADMIN ##############
+
+
+# @login_required
+def admin_dashboard(request):
+    return render(request, 'myapp/admin_dashboard.html')
+
+
+# @login_required
+def manage_buses(request):
+    buses = Bus.objects.all()
+    if request.method == 'POST':
+        form = BusForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "New bus added successfully!")
+            return redirect('admin_manage_buses')
+    else:
+        form = BusForm()
+    return render(request, 'myapp/manage_buses.html', {'buses': buses, 'form': form})
+
+
+# @login_required
+def manage_drivers(request):
+    drivers = Driver.objects.all()
+    if request.method == 'POST':
+        form = DriverForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "New driver added successfully!")
+            return redirect('admin_manage_drivers')
+    else:
+        form = DriverForm()
+    return render(request, 'myapp/manage_drivers.html', {'drivers': drivers, 'form': form})
+
+
+# @login_required
+def view_reservations(request):
+    reservations = Reservation.objects.all()
+    return render(request, 'myapp/view_reservations.html', {'reservations': reservations})
