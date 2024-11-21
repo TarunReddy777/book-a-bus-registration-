@@ -3,32 +3,41 @@
 <div class="container py-3">
     <div class="row justify-content-center mt-4">
         <div class="col-lg-5 col-md-7 col-sm-10 col-xs-12">
-            <div class="card rounded-0">
+            <!-- Card with a dark background -->
+            <div class="card rounded-0 bg-dark text-white shadow-lg">
                 <div class="card-body">
                     <form action="{% url 'signin' %}" method="post" id="signin-form">
+                        <br>
+                        <center>
+                            <h1 class="fw-bold text-light my-4" style="font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);">Login</h1>
+                        </center>
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="username" class="control-label">Username:</label>
-                            <input name='name' class="form-control rounded-0" type="text" id="username" required>
+                            <input name="name" class="form-control rounded-0 bg-secondary text-white border-0" type="text" id="username" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="control-label">Password:</label>
-                            <input name='password' class="form-control rounded-0" type="password" id="password" required>
+                            <input name="password" class="form-control rounded-0 bg-secondary text-white border-0" type="password" id="password" required>
                         </div>
 
                         <!-- Role selection (User or Admin) -->
                         <div class="mb-3">
                             <label for="role" class="control-label">Login as:</label>
-                            <select name="role" class="form-control rounded-0" id="role" required>
+                            <select name="role" class="form-control rounded-0 bg-secondary text-white border-0" id="role" required>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
                     </form>
-                    <p>{{ error }}</p>
+                    {% if error %}
+                        <div class="alert alert-danger mt-3" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="card-footer text-center">
-                    <button class="btn btn-sm rounded-0 btn-primary btn-block w-100" form="signin-form">Login</button>
+                <div class="card-footer text-center bg-secondary">
+                    <button class="btn btn-sm rounded-0 btn-light btn-block w-100" form="signin-form">Login</button>
                 </div>
             </div>
         </div>
