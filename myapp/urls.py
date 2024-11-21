@@ -14,6 +14,7 @@ urlpatterns = [
     path('reservation_success/', views.reservation_success, name='reservation_success'),
     path('feedback/', views.feedback, name='feedback'),
     path('payment/', views.payment, name='payment'),
+    path('select_seats/', views.select_seats, name='select_seats'),
 
     ##### ADMIN #####
     path('brsadmin/dashboard/', views.admin_dashboard, name='admin_dashboard'),

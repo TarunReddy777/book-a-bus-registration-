@@ -14,19 +14,25 @@ def home(request):
     return render(request, 'myapp/home.html')
 
 @login_required
+def select_seats(request):
+    bus_number = request.POST.get('bus_number')
+    from_route = request.POST.get('from_route')
+    to_route = request.POST.get('to_route')
+    date_of_journey = request.POST.get('date_of_journey')
+    context = {
+        'bus_number': int(bus_number),
+        'from_route': from_route,
+        'to_route': to_route,
+        'date_of_journey': date_of_journey,
+    }
+    cache.set('booking_data', context)
+    return render(request, 'myapp/select_seats.html')
+
+@login_required
 def bus_confirmation(request):
     if request.method == 'POST':
-        bus_number = request.POST.get('bus_number')
-        from_route = request.POST.get('from_route')
-        to_route = request.POST.get('to_route')
-        date_of_journey = request.POST.get('date_of_journey')
-
-        context = {
-            'bus_number': int(bus_number),
-            'from_route': from_route,
-            'to_route': to_route,
-            'date_of_journey': date_of_journey,
-        }
+        context = cache.get('booking_data')
+        context['seat_number'] = request.POST.get('num_seats')
         cache.set('booking_data', context)
         return render(request, 'myapp/bus_confirmation.html', context)
 
@@ -172,17 +178,20 @@ def feedback(request):
         form = FeedbackForm()
     return render(request, 'myapp/feedback.html', {'form': form})
 
+
 @login_required
 def payment(request):
     user = request.user
     booking_data = cache.get('booking_data')
+    print('payment', booking_data)
     if request.method == 'POST':
-        amount = request.POST.get('amount')
-        payment = Payment.objects.create(amount=amount, method='Online', status='Paid')
+        amount = booking_data['amount']
+        payment = Payment.objects.create(
+            amount=amount, method='Online', status='Paid')
         reservation = Reservation.objects.create(
             bus=Bus.objects.get(id=random.randint(1, 10)),
-            route=Route.objects.get(id=random.randint(1,10)),
-            passenger=Passenger.objects.get(id=random.randint(1,3)),
+            route=Route.objects.get(id=random.randint(1, 10)),
+            passenger=Passenger.objects.get(id=random.randint(1, 3)),
             seat=Seat.objects.get(id=random.randint(1, 10)),
             status="Booked"
         )
@@ -192,14 +201,17 @@ def payment(request):
             'destination': booking_data['to_route'],
             'date': booking_data['date_of_journey'],
             'bus_number': reservation.bus.bus_number,
+            'seat_number': booking_data['seat_number'],
             'distance': reservation.route.distance,
             'payment_amount': amount
         }
         return render(request, 'myapp/reservation_success.html', context=context)
 
+    context = booking_data
+
+    context['amount'] = round(2.5 * int(context['seat_number']), 2)
+    cache.set('booking_data', context)
     return render(request, 'myapp/payment.html', booking_data)
-
-
 
 
 ############# ADMIN ##############

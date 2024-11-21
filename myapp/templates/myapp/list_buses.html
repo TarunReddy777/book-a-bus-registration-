@@ -11,7 +11,7 @@
           <h5 class="card-title mb-2">Bus Number: <strong>{{ bus.bus_number }}</strong></h5>
           <p class="card-text mb-1">Departure Time: <strong>{{ bus.departure_time }}</strong></p>
           <p class="card-text mb-1">Arrival Time: <strong>{{ bus.arrival_time }}</strong></p>
-          <form action="{% url 'bus_confirmation' %}" method="post" class="mt-auto">
+          <form action="{% url 'select_seats' %}" method="post" class="mt-auto">
             {% csrf_token %}
             <input type="hidden" name="bus_number" value="{{ bus.bus_number }}" />
             <input type="hidden" name="from_route" value="{{ from_route }}" />
