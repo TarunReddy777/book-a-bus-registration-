@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Bus, Reservation, Route, Ticket, Passenger, Feedback, BusCompany, Seat, Payment
-from .forms import FindBusForm, UserRegistrationForm, FeedbackForm, ReservationForm
+from .forms import FindBusForm, UserRegistrationForm, FeedbackForm, ReservationForm, BusForm, DriverForm
 from .models import Bus, User, BusCompany, Seat, Route, Driver
 from django.core.cache import cache
 import random
@@ -125,10 +125,14 @@ def signin(request):
     if request.method == 'POST':
         username = request.POST.get('name')
         password = request.POST.get('password')
+        role = request.POST.get('role')
         user = authenticate(request, username=username, password=password)
-        if user:
+        if user and role == 'user':
             login(request, user)
             return redirect('findbus')
+        elif user and role == 'admin':
+            login(request, user)
+            return redirect('/brsadmin/manage_buses/')
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, 'myapp/signin.html')

@@ -7,14 +7,14 @@ from .models import Bus, Driver
 class BusForm(forms.ModelForm):
     class Meta:
         model = Bus
-        fields = ['bus_number', 'capacity', 'fare', 'name', 'company', 'route', 'seat_count']
+        fields = ['bus_number', 'capacity', 'fare', 'name', 'company', 'route']
 
 
 class DriverForm(forms.ModelForm):
     class Meta:
         model = Driver
         fields = ['name', 'license_number', 'contact_info', 'age']
-        
+
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     class Meta:

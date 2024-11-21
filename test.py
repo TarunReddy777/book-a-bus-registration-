@@ -7,7 +7,7 @@ from django.utils import timezone
 INSERT_ROUTE_QUERY = "INSERT INTO myapp_route (source, destination, startTime, endTime, distance) VALUES (?, ?, ?, ?, ?)"
 INSERT_BUS_COMPANY_QUERY = "INSERT INTO myapp_buscompany (name, email) VALUES (?, ?)"
 INSERT_DRIVER_QUERY = "INSERT INTO myapp_driver (name, license_number, contact_info, age) VALUES (?, ?, ?, ?)"
-INSERT_BUS_QUERY = "INSERT INTO myapp_bus (bus_number, capacity, fare, name, company_id, route_id, driver_id, seat_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+INSERT_BUS_QUERY = "INSERT INTO myapp_bus (bus_number, capacity, fare, name, company_id, route_id, driver_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 INSERT_PASSENGER_QUERY = "INSERT INTO myapp_passenger (name, user_id, phone_number, email) VALUES (?, ?, ?, ?)"
 INSERT_SEAT_QUERY = "INSERT INTO myapp_seat (bus_id, seat_number, is_available) VALUES (?, ?, ?)"
 
@@ -78,7 +78,7 @@ def generate_buses(num_routes=20):
         route = random.randint(1, 10)
         driver = random.randint(1,10)
         
-        seat_count = random.randint(40, 60)
+        # seat_count = random.randint(40, 60)
         
         result = (number, capacity, fare, name, company, route, driver, seat_count)
         buses.append(result)

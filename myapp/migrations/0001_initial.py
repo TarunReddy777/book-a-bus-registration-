@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('capacity', models.SmallIntegerField()),
                 ('fare', models.BigIntegerField()),
                 ('name', models.TextField()),
-                ('seat_count', models.IntegerField()),
+                # ('seat_count', models.IntegerField()),
                 ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='buses', to='myapp.buscompany')),
                 ('driver', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='assigned_buses', to='myapp.driver')),
                 ('route', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='buses', to='myapp.route')),
