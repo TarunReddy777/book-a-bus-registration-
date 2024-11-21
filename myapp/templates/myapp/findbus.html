@@ -4,13 +4,16 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
             <div class="card rounded-3 shadow-lg">
-                
+                <br>
+                <center>
+                    <h1 class="fw-bold text-primary my-4" style="font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">FIND BUS</h3>
+                </center>
                 <div class="card-body">
                     <form action="{% url 'findbus' %}" method="post" id="find-form">
                         {% csrf_token %}
                         <div class="mb-4">
-                            <label for="source" class="form-label">Source</label>
-                            <select name="source" id="source">
+                            <label for="source" class="form-label">Source</label><br>
+                            <select name="source" id="source" class="form-select">
                                 {% for option in options %}
                                     <option value="{{ option.0 }}">{{ option.1 }}</option>
                                 {% endfor %}
@@ -18,8 +21,8 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="destination" class="form-label">Destination</label>
-                            <select name="destination" id="destination">
+                            <label for="destination" class="form-label">Destination</label><br>
+                            <select name="destination" id="destination" class="form-select">
                                 {% for option in options %}
                                     <option value="{{ option.0 }}">{{ option.1 }}</option>
                                 {% endfor %}
@@ -41,7 +44,7 @@
                 </div>
 
                 <div class="card-footer text-center">
-                    <button class="btn btn-primary w-100" form="find-form">Find Bus</button>
+                    <button class="btn btn-primary w-100" form="find-form">Check Availability</button>
                 </div>
             </div>
         </div>

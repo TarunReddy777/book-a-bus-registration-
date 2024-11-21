@@ -16,8 +16,8 @@ urlpatterns = [
     path('payment/', views.payment, name='payment'),
 
     ##### ADMIN #####
-    path('aadmin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
-    path('aadmin/manage_buses/', views.manage_buses, name='admin_manage_buses'),
-    path('aadmin/manage_drivers/', views.manage_drivers, name='admin_manage_drivers'),
-    path('aadmin/view_reservations/', views.view_reservations, name='admin_view_reservations'),
+    path('brsadmin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('brsadmin/manage_buses/', views.manage_buses, name='admin_manage_buses'),
+    path('brsadmin/manage_drivers/', views.manage_drivers, name='admin_manage_drivers'),
+    path('brsadmin/view_reservations/', views.view_reservations, name='admin_view_reservations'),
 ]

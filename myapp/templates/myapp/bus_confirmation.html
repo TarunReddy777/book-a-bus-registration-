@@ -1,15 +1,45 @@
-<div>
-  <h2>Bus Confirmation</h2>
-  <p>Bus Number: {{ bus_number }}</p>
-  <p>From: {{ from_route }}</p>
-  <p>To: {{ to_route }}</p>
-  <p>Date of Journey: {{ date_of_journey }}</p>
-  <form action="{% url 'payment' %}" method="GET">
-    {% csrf_token %}
-    <input type="hidden" name="bus_number" value="{{ bus_number }}" />
-    <input type="hidden" name="from_route" value="{{ from_route }}" />
-    <input type="hidden" name="to_route" value="{{ to_route }}" />
-    <input type="hidden" name="date_of_journey" value="{{ date_of_journey }}" />
-    <button type="submit">Confirm</button>
-  </form>
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+            <div class="card rounded-3 shadow-lg">
+                <div class="card-header text-center bg-primary text-white">
+                    <h2 class="fw-bold">Bus Confirmation</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <p class="fw-bold mb-1">Bus Number:</p>
+                        <p>{{ bus_number }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="fw-bold mb-1">From:</p>
+                        <p>{{ from_route }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="fw-bold mb-1">To:</p>
+                        <p>{{ to_route }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="fw-bold mb-1">Date of Journey:</p>
+                        <p>{{ date_of_journey }}</p>
+                    </div>
+                    <form action="{% url 'payment' %}" method="GET">
+                        {% csrf_token %}
+                        <input type="hidden" name="bus_number" value="{{ bus_number }}" />
+                        <input type="hidden" name="from_route" value="{{ from_route }}" />
+                        <input type="hidden" name="to_route" value="{{ to_route }}" />
+                        <input type="hidden" name="date_of_journey" value="{{ date_of_journey }}" />
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center text-muted">
+                    Please review the details before confirming your booking.
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}

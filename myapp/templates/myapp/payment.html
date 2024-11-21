@@ -4,14 +4,11 @@
     <h2>Make a Payment</h2>
     <form method="post" action="{% url 'payment' %}">
         {% csrf_token %}
-        <input name="bus_number" value="{{ bus_number }}" />
-        <input name="from_route" value="{{ from_route }}" />
-        <input name="to_route" value="{{ to_route }}" />
-        <input name="date_of_journey" value="{{ date_of_journey }}" />
-        <div class="mb-3">
-            <label for="amount" class="form-label">Amount</label>
-            <input type="number" class="form-control" id="amount" name="amount" required>
-        </div>
+        <h5>Bus Number: {{ bus_number }}</h5>
+        <h5>Source: {{ from_route }}</h5>
+        <h5>Destination: {{ to_route }}</h5>
+        <h5>Date of journey: {{ date_of_journey }}</h5>
+        <h5>Amount: 25$</h5>
         <button type="submit" class="btn btn-primary">Submit Payment</button>
     </form>
 </div>
