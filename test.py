@@ -7,6 +7,9 @@ from django.utils import timezone
 INSERT_ROUTE_QUERY = "INSERT INTO myapp_route (source, destination, startTime, endTime, distance) VALUES (?, ?, ?, ?, ?)"
 INSERT_BUS_COMPANY_QUERY = "INSERT INTO myapp_buscompany (name, email) VALUES (?, ?)"
 INSERT_DRIVER_QUERY = "INSERT INTO myapp_driver (name, license_number, contact_info, age) VALUES (?, ?, ?, ?)"
+INSERT_BUS_QUERY = "INSERT INTO myapp_bus (bus_number, capacity, fare, name, company_id, route_id, driver_id, seat_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+INSERT_PASSENGER_QUERY = "INSERT INTO myapp_passenger (name, user_id, phone_number, email) VALUES (?, ?, ?, ?)"
+INSERT_SEAT_QUERY = "INSERT INTO myapp_seat (bus_id, seat_number, is_available) VALUES (?, ?, ?)"
 
 conn = sqlite3.connect('bus_reservation.sqlite3')  # Replace 'your_database.sqlite3' with your actual database file
 cursor = conn.cursor()
@@ -34,16 +37,15 @@ def generate_random_routes(num_routes=20):
     conn.commit()
     cursor.close()
 
-
 def generate_random_bus_company(num_routes=20):
     bus_company = []
     for _ in range(num_routes):
         name = fake.name()
         email = fake.email()
-        
+
         result = (name, email)
         bus_company.append(result)
-    
+
     cursor.executemany(INSERT_BUS_COMPANY_QUERY, bus_company)
     conn.commit()
     cursor.close()
@@ -64,4 +66,55 @@ def generate_driver_name(num_routes=20):
     conn.commit()
     cursor.close()
 
-generate_driver_name(10)
+def generate_buses(num_routes=20):
+    buses = []
+    for _ in range(num_routes):
+        number = fake.vin()
+        capacity = fake.random_number(digits=2)
+        fare = fake.random_number(digits=3)
+        name = fake.name()
+        
+        company = random.randint(1, 10)
+        route = random.randint(1, 10)
+        driver = random.randint(1,10)
+        
+        seat_count = random.randint(40, 60)
+        
+        result = (number, capacity, fare, name, company, route, driver, seat_count)
+        buses.append(result)
+    
+    cursor.executemany(INSERT_BUS_QUERY, buses)
+    conn.commit()
+    cursor.close()
+
+def generate_passengers(num_routes=3):
+    passengers = []
+    count=1
+    for _ in range(num_routes):
+        name = fake.name()
+        user_id = count
+        phone_number=fake.phone_number()
+        email = fake.email()
+        
+        result = (name, user_id, phone_number, email)
+        passengers.append(result)
+        count+=1
+    cursor.executemany(INSERT_PASSENGER_QUERY, passengers)
+    conn.commit()
+    cursor.close()
+
+def generate_seats(num_routes=10):
+    seats = []
+    for _ in range(num_routes):
+        bus = random.randint(1, 10)
+        seat_number = str(fake.random_number(digits=3, fix_len=3))
+        is_available = True if random.randint(1, 1000) %2==0 else False
+        
+        result = (bus, seat_number, is_available)
+        seats.append(result)
+    cursor.executemany(INSERT_SEAT_QUERY, seats)
+    
+    conn.commit()
+    cursor.close()
+
+generate_seats(10)

@@ -16,7 +16,7 @@ class FeedbackForm(forms.ModelForm):
 class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
-        fields = ['bus', 'route', 'seat']
+        fields = ['bus', 'seat']
 
 class FindBusForm(forms.ModelForm):
     class Meta:

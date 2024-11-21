@@ -1,27 +1,28 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Bus, Reservation, Route, Ticket, Passenger, Feedback, BusCompany, Seat
+from .models import Bus, Reservation, Route, Ticket, Passenger, Feedback, BusCompany, Seat, Payment
 from .forms import FindBusForm, UserRegistrationForm, FeedbackForm, ReservationForm
 from .models import Bus, User, BusCompany, Seat, Route, Driver
 from django.core.cache import cache
+import random
 
-
+@login_required
 def home(request):
     return render(request, 'myapp/home.html')
 
-
+@login_required
 def bus_confirmation(request):
     if request.method == 'POST':
-
         bus_number = request.POST.get('bus_number')
         from_route = request.POST.get('from_route')
         to_route = request.POST.get('to_route')
         date_of_journey = request.POST.get('date_of_journey')
 
         context = {
-            'bus_number': bus_number,
+            'bus_number': int(bus_number),
             'from_route': from_route,
             'to_route': to_route,
             'date_of_journey': date_of_journey,
@@ -29,7 +30,7 @@ def bus_confirmation(request):
         cache.set('booking_data', context)
         return render(request, 'myapp/bus_confirmation.html', context)
 
-
+@login_required
 def findbus(request):
     if request.method == 'POST':
         from_route = request.POST.getlist('source')[0]
@@ -39,32 +40,32 @@ def findbus(request):
         # print(from_route, to_route, date_of_journey)
         buses = [
             {
-                'bus_number': 101,
+                'bus_number': 1,
                 'departure_time': '10:00 AM',
                 'arrival_time': '05: 00 PM'
             },
             {
-                'bus_number': 102,
+                'bus_number': 2,
                 'departure_time': '11:00 AM',
                 'arrival_time': '06: 00 PM'
             },
             {
-                'bus_number': 103,
+                'bus_number': 3,
                 'departure_time': '12:00 PM',
                 'arrival_time': '07: 00 PM'
             },
             {
-                'bus_number': 104,
+                'bus_number': 4,
                 'departure_time': '01:00 PM',
                 'arrival_time': '08: 00 PM'
             },
             {
-                'bus_number': 105,
+                'bus_number': 5,
                 'departure_time': '02:00 PM',
                 'arrival_time': '09: 00 PM'
             },
             {
-                'bus_number': 106,
+                'bus_number': 6,
                 'departure_time': '03:00 PM',
                 'arrival_time': '10: 00 PM'
             }
@@ -93,12 +94,22 @@ def seebookings(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            Passenger.objects.create(user=user)
-            messages.success(request, "Account created successfully!")
-            return redirect('signin')
+        username = request.POST.get('name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        print(username, email, password)
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        user.set_password(password)
+        user.save()
+
+        messages.info(request, "Account created Successfully!")
+        return redirect('/signin/')
     else:
         form = UserRegistrationForm()
     return render(request, 'myapp/signup.html', {'form': form})
@@ -111,7 +122,7 @@ def signin(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('success')
+            return redirect('findbus')
         else:
             messages.error(request, "Invalid username or password.")
     return render(request, 'myapp/signin.html')
@@ -161,13 +172,20 @@ def feedback(request):
         form = FeedbackForm()
     return render(request, 'myapp/feedback.html', {'form': form})
 
+@login_required
 def payment(request):
+    user = request.user
     booking_data = cache.get('booking_data')
-    print(booking_data)
     if request.method == 'POST':
         amount = request.POST.get('amount')
-        booking_data['amount'] = amount
-
+        payment = Payment.objects.create(amount=amount, method='Online', status='Paid')
+        reservation = Reservation.objects.create(
+            bus=Bus.objects.get(id=random.randint(1, 10)),
+            route=Route.objects.get(id=random.randint(1,10)),
+            passenger=Passenger.objects.get(id=random.randint(1,3)),
+            seat=Seat.objects.get(id=random.randint(1, 10)),
+            status="Booked"
+        )
         return render(request, 'myapp/reservation_success.html')
 
     return render(request, 'myapp/payment.html', booking_data)

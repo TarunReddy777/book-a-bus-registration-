@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
 ]
+LOGIN_URL = 'signin'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

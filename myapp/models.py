@@ -10,7 +10,6 @@ class BusCompany(models.Model):
     def __str__(self):
         return self.name
 
-
 class Bus(models.Model):
     bus_number = models.CharField(max_length=20, unique=True)
     capacity = models.SmallIntegerField()
@@ -20,7 +19,7 @@ class Bus(models.Model):
     company = models.ForeignKey('BusCompany', on_delete=models.CASCADE, related_name="buses")
     route = models.ForeignKey('Route', on_delete=models.CASCADE, related_name="buses")
     driver = models.ForeignKey('Driver', on_delete=models.SET_NULL, null=True, blank=True, related_name="assigned_buses")
-    
+
     seat_count = models.IntegerField()
 
     def __str__(self):
