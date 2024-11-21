@@ -1,0 +1,63 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center mb-4">Buses from {{ from_route }} to {{ to_route }} on {{ date_of_journey }}</h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for bus in buses %}
+    <div class="col">
+      <div class="card h-100 border shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title mb-2">Bus Number: <strong>{{ bus.bus_number }}</strong></h5>
+          <p class="card-text mb-1">Departure Time: <strong>{{ bus.departure_time }}</strong></p>
+          <p class="card-text mb-1">Arrival Time: <strong>{{ bus.arrival_time }}</strong></p>
+          <form action="{% url 'bus_confirmation' %}" method="post" class="mt-auto">
+            {% csrf_token %}
+            <input type="hidden" name="bus_number" value="{{ bus.bus_number }}" />
+            <input type="hidden" name="from_route" value="{{ from_route }}" />
+            <input type="hidden" name="to_route" value="{{ to_route }}" />
+            <input type="hidden" name="date_of_journey" value="{{ date_of_journey }}" />
+            <button type="submit" class="btn btn-primary w-100 btn-custom">Select</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+  /* Styling for the buttons */
+  .btn-custom {
+    background-color: #007bff; /* Blue background */
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out; /* Smooth transition effect */
+  }
+
+  /* Hover effect for the button */
+  .btn-custom:hover {
+    background-color: #0056b3; /* Darker blue */
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+  }
+
+  .btn-custom:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Focus effect */
+  }
+
+  /* Add smooth card hover effect */
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Lift card effect */
+  }
+</style>
+{% endblock %}

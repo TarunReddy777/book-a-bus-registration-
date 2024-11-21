@@ -1,0 +1,26 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2>Booking History</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Reservation Date</th>
+                <th>Bus</th>
+                <th>Route</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.reservation_date }}</td>
+                <td>{{ reservation.bus }}</td>
+                <td>{{ reservation.route }}</td>
+                <td>{{ reservation.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

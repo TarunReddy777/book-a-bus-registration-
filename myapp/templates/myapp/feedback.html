@@ -1,0 +1,11 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2>Feedback</h2>
+    <form method="post" action="{% url 'feedback' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+</div>
+{% endblock %}

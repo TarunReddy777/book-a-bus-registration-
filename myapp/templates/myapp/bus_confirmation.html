@@ -1,0 +1,15 @@
+<div>
+  <h2>Bus Confirmation</h2>
+  <p>Bus Number: {{ bus_number }}</p>
+  <p>From: {{ from_route }}</p>
+  <p>To: {{ to_route }}</p>
+  <p>Date of Journey: {{ date_of_journey }}</p>
+  <form action="{% url 'payment' %}" method="GET">
+    {% csrf_token %}
+    <input type="hidden" name="bus_number" value="{{ bus_number }}" />
+    <input type="hidden" name="from_route" value="{{ from_route }}" />
+    <input type="hidden" name="to_route" value="{{ to_route }}" />
+    <input type="hidden" name="date_of_journey" value="{{ date_of_journey }}" />
+    <button type="submit">Confirm</button>
+  </form>
+</div>

@@ -1,0 +1,26 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2>Your Tickets</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ticket Number</th>
+                <th>Reservation Date</th>
+                <th>Route</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.ticket_number }}</td>
+                <td>{{ ticket.reservation.reservation_date }}</td>
+                <td>{{ ticket.reservation.route }}</td>
+                <td>{{ ticket.reservation.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

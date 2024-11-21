@@ -1,167 +1,173 @@
-from datetime import datetime
-from django.contrib import messages
-from django.shortcuts import render
-from decimal import Decimal
-
-# Create your views here.
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import User, Bus, Book
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from .forms import UserLoginForm, UserRegisterForm
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from decimal import Decimal
+from django.contrib import messages
+from .models import Bus, Reservation, Route, Ticket, Passenger, Feedback, BusCompany, Seat
+from .forms import FindBusForm, UserRegistrationForm, FeedbackForm, ReservationForm
+from .models import Bus, User, BusCompany, Seat, Route, Driver
+from django.core.cache import cache
 
 
 def home(request):
-    if request.user.is_authenticated:
-        return render(request, 'myapp/home.html')
-    else:
-        return render(request, 'myapp/signin.html')
+    return render(request, 'myapp/home.html')
 
 
-@login_required(login_url='signin')
+def bus_confirmation(request):
+    if request.method == 'POST':
+
+        bus_number = request.POST.get('bus_number')
+        from_route = request.POST.get('from_route')
+        to_route = request.POST.get('to_route')
+        date_of_journey = request.POST.get('date_of_journey')
+
+        context = {
+            'bus_number': bus_number,
+            'from_route': from_route,
+            'to_route': to_route,
+            'date_of_journey': date_of_journey,
+        }
+        cache.set('booking_data', context)
+        return render(request, 'myapp/bus_confirmation.html', context)
+
+
 def findbus(request):
-    context = {}
     if request.method == 'POST':
-        source_r = request.POST.get('source')
-        dest_r = request.POST.get('destination')
-        date_r = request.POST.get('date')
-        date_r = datetime.strptime(date_r,"%Y-%m-%d").date()
-        year = date_r.strftime("%Y")
-        month = date_r.strftime("%m")
-        day = date_r.strftime("%d")
-        bus_list = Bus.objects.filter(source=source_r, dest=dest_r, date__year=year, date__month=month, date__day=day)
-        if bus_list:
-            return render(request, 'myapp/list.html', locals())
-        else:
-            context['data'] = request.POST
-            context["error"] = "No available Bus Schedule for entered Route and Date"
-            return render(request, 'myapp/findbus.html', context)
-    else:
-        return render(request, 'myapp/findbus.html')
+        from_route = request.POST.getlist('source')[0]
+        to_route = request.POST.getlist('destination')[0]
+        date_of_journey = request.POST.get('date')
+
+        # print(from_route, to_route, date_of_journey)
+        buses = [
+            {
+                'bus_number': 101,
+                'departure_time': '10:00 AM',
+                'arrival_time': '05: 00 PM'
+            },
+            {
+                'bus_number': 102,
+                'departure_time': '11:00 AM',
+                'arrival_time': '06: 00 PM'
+            },
+            {
+                'bus_number': 103,
+                'departure_time': '12:00 PM',
+                'arrival_time': '07: 00 PM'
+            },
+            {
+                'bus_number': 104,
+                'departure_time': '01:00 PM',
+                'arrival_time': '08: 00 PM'
+            },
+            {
+                'bus_number': 105,
+                'departure_time': '02:00 PM',
+                'arrival_time': '09: 00 PM'
+            },
+            {
+                'bus_number': 106,
+                'departure_time': '03:00 PM',
+                'arrival_time': '10: 00 PM'
+            }
+        ]
+        context = {'buses': buses, 'from_route': from_route,
+                   'to_route': to_route, 'date_of_journey': date_of_journey}
+        return render(request, 'myapp/list_buses.html', context)
+
+    context = {
+        'options': [
+            ('Atlanta', 'Atlanta'),
+            ('New York', 'New York'),
+            ('Los Angelos', 'Los Angelos'),
+            ('Tampa', 'Tampa'),
+            ('Carolina', 'Carolina'),
+            ('Washington DC', 'Washington DC'),
+            ('San Francisco', 'San Francisco')
+        ]
+    }
+    return render(request, 'myapp/findbus.html', context=context)
 
 
-@login_required(login_url='signin')
-def bookings(request):
-    context = {}
-    if request.method == 'POST':
-        id_r = request.POST.get('bus_id')
-        seats_r = int(request.POST.get('no_seats'))
-        bus = Bus.objects.get(id=id_r)
-        if bus:
-            if bus.rem > int(seats_r):
-                name_r = bus.bus_name
-                cost = int(seats_r) * bus.price
-                source_r = bus.source
-                dest_r = bus.dest
-                nos_r = Decimal(bus.nos)
-                price_r = bus.price
-                date_r = bus.date
-                time_r = bus.time
-                username_r = request.user.username
-                email_r = request.user.email
-                userid_r = request.user.id
-                rem_r = bus.rem - seats_r
-                Bus.objects.filter(id=id_r).update(rem=rem_r)
-                book = Book.objects.create(name=username_r, email=email_r, userid=userid_r, bus_name=name_r,
-                                           source=source_r, busid=id_r,
-                                           dest=dest_r, price=price_r, nos=seats_r, date=date_r, time=time_r,
-                                           status='BOOKED')
-                print('------------book id-----------', book.id)
-                # book.save()
-                return render(request, 'myapp/bookings.html', locals())
-            else:
-                context["error"] = "Sorry select fewer number of seats"
-                return render(request, 'myapp/findbus.html', context)
-
-    else:
-        return render(request, 'myapp/findbus.html')
-
-
-@login_required(login_url='signin')
-def cancellings(request):
-    context = {}
-    if request.method == 'POST':
-        id_r = request.POST.get('bus_id')
-        #seats_r = int(request.POST.get('no_seats'))
-
-        try:
-            book = Book.objects.get(id=id_r)
-            bus = Bus.objects.get(id=book.busid)
-            rem_r = bus.rem + book.nos
-            Bus.objects.filter(id=book.busid).update(rem=rem_r)
-            #nos_r = book.nos - seats_r
-            Book.objects.filter(id=id_r).update(status='CANCELLED')
-            Book.objects.filter(id=id_r).update(nos=0)
-            messages.success(request, "Booked Bus has been cancelled successfully.")
-            return redirect(seebookings)
-        except Book.DoesNotExist:
-            context["error"] = "Sorry You have not booked that bus"
-            return render(request, 'myapp/error.html', context)
-    else:
-        return render(request, 'myapp/findbus.html')
-
-
-@login_required(login_url='signin')
-def seebookings(request,new={}):
-    context = {}
-    id_r = request.user.id
-    book_list = Book.objects.filter(userid=id_r)
-    if book_list:
-        return render(request, 'myapp/booklist.html', locals())
-    else:
-        context["error"] = "Sorry no buses booked"
-        return render(request, 'myapp/findbus.html', context)
+def seebookings(request):
+    return render(request, 'myapp/seebookings.html')
 
 
 def signup(request):
-    context = {}
     if request.method == 'POST':
-        name_r = request.POST.get('name')
-        email_r = request.POST.get('email')
-        password_r = request.POST.get('password')
-        user = User.objects.create_user(name_r, email_r, password_r, )
-        if user:
-            login(request, user)
-            return render(request, 'myapp/thank.html')
-        else:
-            context["error"] = "Provide valid credentials"
-            return render(request, 'myapp/signup.html', context)
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Passenger.objects.create(user=user)
+            messages.success(request, "Account created successfully!")
+            return redirect('signin')
     else:
-        return render(request, 'myapp/signup.html', context)
+        form = UserRegistrationForm()
+    return render(request, 'myapp/signup.html', {'form': form})
 
 
 def signin(request):
-    context = {}
     if request.method == 'POST':
-        name_r = request.POST.get('name')
-        password_r = request.POST.get('password')
-        user = authenticate(request, username=name_r, password=password_r)
+        username = request.POST.get('name')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            # username = request.session['username']
-            context["user"] = name_r
-            context["id"] = request.user.id
-            return render(request, 'myapp/success.html', context)
-            # return HttpResponseRedirect('success')
+            return redirect('success')
         else:
-            context["error"] = "Provide valid credentials"
-            return render(request, 'myapp/signin.html', context)
-    else:
-        context["error"] = "You are not logged in"
-        return render(request, 'myapp/signin.html', context)
+            messages.error(request, "Invalid username or password.")
+    return render(request, 'myapp/signin.html')
+
+
+@login_required
+def success(request):
+    return render(request, 'myapp/success.html', {'user': request.user})
 
 
 def signout(request):
-    context = {}
     logout(request)
-    context['error'] = "You have been logged out"
-    return render(request, 'myapp/signin.html', context)
+    return redirect('home')
 
 
-def success(request):
-    context = {}
-    context['user'] = request.user
-    return render(request, 'myapp/success.html', context)
+@login_required
+def reserve_seat(request):
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.passenger = Passenger.objects.get(user=request.user)
+            reservation.save()
+            messages.success(request, "Reservation made successfully!")
+            return redirect('reservation_success')
+    else:
+        form = ReservationForm()
+    return render(request, 'myapp/reserve_seat.html', {'form': form})
+
+
+@login_required
+def reservation_success(request):
+    return render(request, 'myapp/reservation_success.html')
+
+
+@login_required
+def feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.user = request.user
+            feedback.save()
+            messages.success(request, "Thank you for your feedback!")
+            return redirect('home')
+    else:
+        form = FeedbackForm()
+    return render(request, 'myapp/feedback.html', {'form': form})
+
+def payment(request):
+    booking_data = cache.get('booking_data')
+    print(booking_data)
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        booking_data['amount'] = amount
+
+        return render(request, 'myapp/reservation_success.html')
+
+    return render(request, 'myapp/payment.html', booking_data)

@@ -1,0 +1,18 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2>Make a Payment</h2>
+    <form method="post" action="{% url 'payment' %}">
+        {% csrf_token %}
+        <input name="bus_number" value="{{ bus_number }}" />
+        <input name="from_route" value="{{ from_route }}" />
+        <input name="to_route" value="{{ to_route }}" />
+        <input name="date_of_journey" value="{{ date_of_journey }}" />
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="amount" name="amount" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Payment</button>
+    </form>
+</div>
+{% endblock %}

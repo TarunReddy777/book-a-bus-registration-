@@ -1,0 +1,11 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2>Reserve a Seat</h2>
+    <form method="post" action="{% url 'reserve_seat' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Reserve</button>
+    </form>
+</div>
+{% endblock %}

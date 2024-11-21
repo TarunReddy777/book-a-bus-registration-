@@ -1,10 +1,19 @@
-{% extends 'myapp/base.html' %} {% block content %}
-<div class="container py-5">
-    <div class="card bg-gradient bg-success">
-        <div class="card-body">
-            <h2 class="my-3 text-center text-light bg-dark">
-                Bus Reservation System
-            </h2>
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-5">Welcome to the Bus Reservation System</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <!-- Using a local image with static tag -->
+            <img src="{% static 'mysite/images/busimage.jpeg' %}" alt="Bus Image" class="img-fluid mb-4">
+            <p class="lead mb-4">
+                Book your tickets easily with our Bus Reservation System. Explore various routes, check seat availability, and reserve your seats online!
+            </p>
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'signin' %}" class="btn btn-primary btn-lg mx-2">Sign In</a>
+                <a href="{% url 'signup' %}" class="btn btn-success btn-lg mx-2">Sign Up</a>
+            </div>
         </div>
     </div>
 </div>
